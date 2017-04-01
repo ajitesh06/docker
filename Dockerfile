@@ -13,12 +13,13 @@ RUN rm jdk-*.rpm
 ENV JAVA_HOME /usr/java/jdk1.8.0_111/jre
 
 #INSTALLING tc-server
-EXPOSE 8080 
 RUN rpm --import http://packages.gopivotal.com/pub/rpm/rhel7/app-suite/RPM-GPG-KEY-PIVOTAL-APP-SUITE-EL7
 RUN yum-config-manager --add-repo http://packages.pivotal.io/pub/rpm/rhel7/app-suite/x86_64
 RUN yum install pivotal-tc-server-standard-3.2.1-RELEASE -y
 RUN mkdir -p /web/tcserver
 RUN /opt/pivotal/pivotal-tc-server-standard/tcruntime-instance.sh create -i /web/tcserver jenkins
 ADD jenkins.war /web/tcserver/jenkins/webapps/
-
-RUN /web/tcserver/jenkins/bin/./tcruntime-ctl.sh start /web/tcserver/jenkins
+#RUN /web/tcserver/jenkins/bin/./tcruntime-ctl.sh start /web/tcserver/jenkins
+ENTRYPOINT 
+EXPOSE 8080
+CMD /web/tcserver/jenkins/bin/tcruntime-ctl.sh start && tail -f /web/tcserver/jenkins/logs/catalina.out
